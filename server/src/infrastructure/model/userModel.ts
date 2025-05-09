@@ -1,0 +1,34 @@
+// src/infrastructure/database/models/UserModel.ts
+import mongoose, { Schema, Document } from 'mongoose';
+import { UserRole } from '../../domain/enums/UserRole';
+
+export interface UserDocument extends Document {
+  name: string;
+  email: string;
+  passwordHash?: string;
+  role: UserRole;
+  gender: UserRole; 
+  otp?: string;
+  otpExpiry?: Date;
+  isApproved: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const userSchema = new Schema<UserDocument>(
+  {
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    passwordHash: { type: String },
+    role: { type: String, enum: Object.values(UserRole), required: true },
+    gender: { type: String, enum: Object.values(UserRole), required: true },
+    otp: { type: String },
+    otpExpiry: { type: Date },
+    isApproved: { type: Boolean, default: false },
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now }
+  },
+  { versionKey: false }
+);
+
+export const UserModel = mongoose.model<UserDocument>('User', userSchema);
