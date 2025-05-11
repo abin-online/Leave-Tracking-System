@@ -1,9 +1,10 @@
 import SignUp from "../../components/SignUp";
+import { userSignup } from "../../api/auth";
 
 const UserSignup = () => {
   return (
     <>
-      <SignUp/>
+      <SignUp role='employee' handleSignup={userSignup}/>
     </>
   );
 };

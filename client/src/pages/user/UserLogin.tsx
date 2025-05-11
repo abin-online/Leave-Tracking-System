@@ -1,9 +1,10 @@
 import LoginPage from "../../components/Login";
+import { userLogin } from "../../api/auth";
 
 const UserLogin = () => {
   return (
     <>
-      <LoginPage />
+      <LoginPage role="employee" handleLogin={userLogin}/>
     </>
   );
 };

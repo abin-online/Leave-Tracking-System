@@ -20,7 +20,6 @@ api.interceptors.request.use(
         const accessToken = localStorage.getItem('accessToken');
         const refreshToken = localStorage.getItem('refreshToken');
         const role = localStorage.getItem('role');
-        const verifyToken = localStorage.getItem('verifyToken');
 
         if (config.headers) {
             if (accessToken) {
@@ -31,9 +30,6 @@ api.interceptors.request.use(
             }
             if (role) {
                 config.headers['x-user-role'] = role;
-            }
-            if (verifyToken) {
-                config.headers['x-verify-token'] = verifyToken;
             }
         }
 

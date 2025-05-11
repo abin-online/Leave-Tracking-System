@@ -1,9 +1,10 @@
 import LoginPage from "../../components/Login";
+import { adminLogin } from "../../api/auth";
 
 const AdminLogin = () => {
   return (
     <>
-      <LoginPage />
+      <LoginPage role='admin' handleLogin={adminLogin}/>
     </>
   );
 };

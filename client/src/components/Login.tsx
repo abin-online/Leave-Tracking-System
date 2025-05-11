@@ -10,6 +10,10 @@ import {
   IconButton,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { Link as MuiLink } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUser } from "../store/user/userSlice";
 
 interface LoginData {
   email: string;
@@ -21,7 +25,18 @@ interface LoginErrors {
   password?: string;
 }
 
-const LoginPage: React.FC = () => {
+interface LoginPageProps {
+  role: "admin" | "manager" | "employee";
+  handleLogin: (data: {
+    email: string;
+    password: string;
+    role: "admin" | "manager" | "employee";
+  }) => Promise<any>;
+}
+
+const LoginPage: React.FC<LoginPageProps> = ({ role, handleLogin }) => {
+  const dispatch = useDispatch();
+
   const [loginData, setLoginData] = useState<LoginData>({
     email: "",
     password: "",
@@ -64,31 +79,64 @@ const LoginPage: React.FC = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (validateLogin()) {
-      console.log("Logging in with:", loginData);
-      alert("Login successful 🎉");
-      // Call your login API here
+      try {
+        console.log("Logging in with:", loginData);
+        const response = await handleLogin({
+          email: loginData.email,
+          password: loginData.password,
+          role: role,
+        });
+        console.log("Login success", response);
+
+        
+        localStorage.setItem("accessToken", response.accessToken);
+        localStorage.setItem("refreshToken", response.refreshToken);
+        localStorage.setItem("role", response.role);
+        localStorage.setItem("email", response.email);
+        localStorage.setItem("name", response.user.name);
+
+        dispatch(setUser({
+          name: response.user.name,
+          email: response.user.email,
+          role: response.user.role,
+        }));
+
+        if (role == "employee") {
+
+        }
+
+        // You can show success toast, redirect, etc.
+      } catch (err) {
+        // Show error toast or message here
+        console.error("Login failed", err);
+      }
     }
   };
 
   return (
     <Box
       sx={{
-        height: "100vh", 
+        height: "100vh",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
       }}
     >
       <Container maxWidth="xs">
-        <Paper elevation={3} sx={{ p: 4 }}>
-          <Typography variant="h4" align="center" >
-            LOG IN
+        <Paper elevation={5} sx={{ p: 4 }}>
+          <Typography variant="h5" align="center">
+            {role.toUpperCase()} LOG IN
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 2 }}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{ mt: 2 }}
+          >
             <TextField
               margin="normal"
               required
@@ -138,11 +186,28 @@ const LoginPage: React.FC = () => {
               Log In
             </Button>
           </Box>
+          <Box>
+            {["employee", "manager"].includes(role) && (
+              <Box mt={2} textAlign="center">
+                <Typography variant="body2">
+                  New here?{" "}
+                  <MuiLink
+                    component={RouterLink}
+                    to={
+                      role === "employee" ? "/user-signup" : "/manager-signup"
+                    }
+                    underline="hover"
+                  >
+                    Sign up
+                  </MuiLink>
+                </Typography>
+              </Box>
+            )}
+          </Box>
         </Paper>
       </Container>
     </Box>
   );
-  
 };
 
 export default LoginPage;
