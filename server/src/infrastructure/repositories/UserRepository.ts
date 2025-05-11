@@ -1,7 +1,8 @@
+import mongoose, { Types } from 'mongoose';
 import { User } from '../../domain/entities/User';
 import { IUserRepository } from '../../domain/repositories/IUserRepository';
 import { UserRole } from '../../domain/enums/UserRole';
-import { UserModel } from '../model/userModel';
+import { UserModel } from '../database/mongo/model/userModel';
 
 export class UserRepository implements IUserRepository {
   async findById(id: string): Promise<User | null> {
@@ -42,6 +43,24 @@ export class UserRepository implements IUserRepository {
 
     return managers.map(manager => this.mapToUser(manager));
   }
+
+  async assignEmployeesToManager(managerId: string, employeeId: string): Promise<User> {
+  
+    const employeeObjectId = new mongoose.Types.ObjectId(employeeId);
+  
+    const updatedManager = await UserModel.findByIdAndUpdate(
+      managerId,
+      {
+        $addToSet: { employees: employeeObjectId },  
+      },
+      { new: true }  
+    ).exec();
+  
+  
+    return this.mapToUser(updatedManager); 
+  }
+  
+  
 
   private mapToUser(user: any): User {
     return {

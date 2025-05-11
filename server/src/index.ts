@@ -5,28 +5,31 @@ import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 
-import routes from './interface/routes/routes'
-import { errorMiddleware } from './interface/routes/injection';
+import connectDatabase from './infrastructure/database/mongo/connectDb';
+import routes from './interface/routes/appRoutes';
+import { errorMiddleware } from './interface/routes/dependencyInjection/authentication';
+
 dotenv.config();
 
 const app = express();
 
-
+connectDatabase();
 
 app.use(morgan('dev'));
-app.use(cors());
+app.use(cors({
+  credentials: true,
+  origin: 'http://localhost:5173'
+}));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Define your routes here
 app.use('/api', routes);
 
-app.use(errorMiddleware.handleErrors);
 app.use(errorMiddleware.handleNotFound);
+app.use(errorMiddleware.handleErrors);
 
-
-const port = process.  env.PORT || 3000;
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  console.log(`🚀 Server running on http://localhost:${port}`);
 });

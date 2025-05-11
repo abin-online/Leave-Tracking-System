@@ -8,4 +8,5 @@ export interface IUserRepository {
   update(id: string, user: Partial<User>): Promise<User | null>;
   findByRole(role: UserRole): Promise<User[]>;
   findPendingManagers(): Promise<User[]>;
+  assignEmployeesToManager(managerId: string, employeeId: string): Promise<User>;
 }

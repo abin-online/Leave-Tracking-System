@@ -1,12 +1,11 @@
 import { Router } from 'express';
-import { authController } from './injection';
-import { AuthMiddleware } from '../middleware/authMiddleware';
+import { authController } from './dependencyInjection/authentication';
+import { authMiddleware } from './dependencyInjection/authentication';
 import { UserRole } from '../../domain/enums/UserRole';
 import { AuthService } from '../../infrastructure/services/AuthService';
 
 export const createAuthRouter = (authService: AuthService): Router => {
     const router = Router();
-    const authMiddleware = new AuthMiddleware(authService);
 
     // User routes
     router.post('/user/signup', authController.signupUser);
@@ -18,6 +17,8 @@ export const createAuthRouter = (authService: AuthService): Router => {
     router.post('/manager/login', authController.loginManager);
 
     // Admin routes
+    router.post('/admin/login', authController.adminLogin);
+
     router.put(
         '/admin/approve-manager/:managerId',
         authMiddleware.authenticate,

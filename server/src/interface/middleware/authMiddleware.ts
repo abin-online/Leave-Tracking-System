@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { IAuthService } from '../../domain/services/IAuthService';
 import { UserRole } from '../../domain/enums/UserRole';
+import { IUserRepository } from '../../domain/repositories/IUserRepository';
 
 declare global {
   namespace Express {
@@ -12,7 +13,10 @@ declare global {
 }
 
 export class AuthMiddleware {
-  constructor(private authService: IAuthService) {}
+  constructor(
+    private authService: IAuthService,
+    private userRepository: IUserRepository
+  ) { }
 
   authenticate = (req: Request, res: Response, next: NextFunction): void => {
     try {
@@ -80,4 +84,27 @@ export class AuthMiddleware {
     }
     next();
   };
+
+  managerOrAdminCanAccessEmployee = async (req: Request, res: Response, next: NextFunction) => {
+    const { managerId, employeeId } = req.params;
+
+    // If user is admin, let them pass directly
+    if (req.userRole === UserRole.ADMIN) {
+      return next();
+    }
+
+    // Only allow if the request is from the correct manager
+    if (req.userRole !== UserRole.MANAGER || req.userId !== managerId) {
+      res.status(403).json({ message: 'Access denied', success: false });
+    }
+
+    const manager = await this.userRepository.findById(managerId);
+    if (!manager || !manager.employees?.includes(employeeId)) {
+      res.status(403).json({ message: 'Employee not managed by this manager', success: false });
+      return
+    }
+
+    next();
+  };
+
 }

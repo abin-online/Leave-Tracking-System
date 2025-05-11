@@ -10,7 +10,8 @@ export interface User {
     gender: Gender;
     otp?: string;
     otpExpiry?: Date;
-    isApproved?: boolean; // For manager approval status
+    isApproved?: boolean; 
+    employees? : string[]
     createdAt: Date;
     updatedAt: Date;
 }
