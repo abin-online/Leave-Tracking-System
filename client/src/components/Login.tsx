@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { Link as MuiLink } from "@mui/material";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser } from "../store/user/userSlice";
 
@@ -78,7 +78,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ role, handleLogin }) => {
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
-
+  const navigate = useNavigate();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -92,21 +92,28 @@ const LoginPage: React.FC<LoginPageProps> = ({ role, handleLogin }) => {
         });
         console.log("Login success", response);
 
-        
         localStorage.setItem("accessToken", response.accessToken);
         localStorage.setItem("refreshToken", response.refreshToken);
         localStorage.setItem("role", response.role);
         localStorage.setItem("email", response.email);
         localStorage.setItem("name", response.user.name);
 
-        dispatch(setUser({
-          name: response.user.name,
-          email: response.user.email,
-          role: response.user.role,
-        }));
+        dispatch(
+          setUser({
+            name: response.user.name,
+            email: response.user.email,
+            role: response.user.role,
+          })
+        );
 
         if (role == "employee") {
-
+          navigate("/");
+        } else if (role == "admin") {
+          navigate("/admin");
+        } else if (role == "manager") {
+          navigate("/manager");
+        } else {
+          console.log("Error occured in routing");
         }
 
         // You can show success toast, redirect, etc.

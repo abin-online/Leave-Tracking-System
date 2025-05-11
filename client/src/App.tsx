@@ -16,8 +16,7 @@ import ManagerLogin from "./pages/manager/ManagerLogin";
 import UserLogin from "./pages/user/UserLogin";
 import UserSignup from "./pages/user/UserSignup";
 import OtpPage from "./pages/user/OtpPage";
-
-// … your page components (UserPage, AdminLoginPage, etc.) …
+import PublicRoute from "./routes/PublicRoutes";
 
 const AppRoutes = () => {
   const role = useSelector((state: RootState) => state.user.role);
@@ -26,29 +25,56 @@ const AppRoutes = () => {
   return (
     <Router>
       <Routes>
-        {/* Public routes */}
-        <Route path="/admin-login" element={<AdminLogin />} />
-        <Route path="/manager-login" element={<ManagerLogin />} />
-        <Route path="/user-login" element={<UserLogin />} />
-        <Route path="/user-signup" element={<UserSignup />} />
-        <Route path="/submit-otp" element={<OtpPage />} />
-        {/* <Route path="/" element={<Navigate to="/user-login" />} /> */}
+        {/* Public routes wrapped */}
+        <Route
+          path="/admin-login"
+          element={
+            <PublicRoute>
+              <AdminLogin />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/manager-login"
+          element={
+            <PublicRoute>
+              <ManagerLogin />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/user-login"
+          element={
+            <PublicRoute>
+              <UserLogin />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/user-signup"
+          element={
+            <PublicRoute>
+              <UserSignup />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/submit-otp"
+          element={
+            <PublicRoute>
+              <OtpPage />
+            </PublicRoute>
+          }
+        />
 
+        {/* Protected routes as before */}
         {role === "admin" && (
-          <>
-            <Route path="/admin/*" element={<AdminRoutes />} />
-          </>
+          <Route path="/admin/*" element={<AdminRoutes />} />
         )}
         {role === "manager" && (
-          <>
-            <Route path="/manager/*" element={<ManagerRoutes />} />
-          </>
+          <Route path="/manager/*" element={<ManagerRoutes />} />
         )}
-        {role === "employee" && (
-          <>
-            <Route path="/*" element={<UserRoutes />} />
-          </>
-        )}
+        {role === "employee" && <Route path="/*" element={<UserRoutes />} />}
 
         {/* Fallback route */}
         <Route path="*" element={<Navigate to="/user-login" />} />
@@ -59,8 +85,6 @@ const AppRoutes = () => {
 
 const App = () => (
   <Provider store={store}>
-    {" "}
-    {/* ← <Provider> uses your store */}
     <PersistGate loading={null} persistor={persistor}>
       <AppRoutes />
     </PersistGate>
