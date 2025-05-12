@@ -1,16 +1,17 @@
 import { Router } from 'express';
 import { createAuthRouter } from './authRoutes';
-import { AuthService } from '../../infrastructure/services/AuthService';
-
-// You can instantiate any services here (or use a proper DI later)
-const authService = new AuthService();
-
+import { createAttendanceRouter } from './attendanceRoutes';
+import { createHolidayCalendarRouter } from './holidayCalendarRoutes';
+import { createLeaveRequestRouter } from './leaveRoutes';
+import { createZoneRouter } from './zoneRoutes';
+import { createLeaveTypeRouter } from './leaveTypeRoutes';
 const router = Router();
 
-router.use('/auth', createAuthRouter(authService));
-
-// Add other feature routes below like:
-// router.use('/feedback', createFeedbackRouter());
-// router.use('/users', createUserRouter());
+router.use('/auth', createAuthRouter());
+router.use('/attendance', createAttendanceRouter());
+router.use('/holidayCalendar', createHolidayCalendarRouter());
+router.use('/leave', createLeaveRequestRouter());
+router.use('/leave-types', createLeaveTypeRouter());
+router.use('/zone', createZoneRouter());
 
 export default router;

@@ -4,7 +4,7 @@ import { authMiddleware } from './dependencyInjection/authentication';
 import { UserRole } from '../../domain/enums/UserRole';
 import { AuthService } from '../../infrastructure/services/AuthService';
 
-export const createAuthRouter = (authService: AuthService): Router => {
+export const createAuthRouter = (): Router => {
     const router = Router();
 
     // User routes

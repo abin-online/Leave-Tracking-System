@@ -5,11 +5,11 @@ export interface Attendance {
     checkOutTime?: Date;
     status: 'approved' | 'pending' | 'missed';
     editRequest?: {
-      reason: string;
-      status: 'pending' | 'approved' | 'rejected';
-      reviewedBy?: string;
-      reviewedAt?: Date;
+        reason: string;
+        status: 'pending' | 'approved' | 'rejected';
+        reviewedBy?: string;
+        reviewedAt?: Date;
     };
     createdAt: Date;
     updatedAt: Date;
-  }
+}

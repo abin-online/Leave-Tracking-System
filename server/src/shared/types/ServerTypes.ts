@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import { User } from '../../domain/entities/User';
 
 export interface CustomRequest extends Request {
-    user?: User;
+    userId?: string;
+    userRole?: string
 }
 
 export interface CustomResponse extends Response {

@@ -47,7 +47,7 @@ export class AuthMiddleware {
         res.status(401).json({ message: 'Invalid or expired token', success: false });
         return;
       }
-
+      
       req.userId = decoded.userId;
       req.userRole = decoded.role;
 

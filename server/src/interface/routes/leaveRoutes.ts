@@ -1,57 +1,67 @@
-import { Router } from 'express';
-import { UserRole } from '../../domain/enums/UserRole'; 
-import { AuthMiddleware } from '../middleware/authMiddleware';
-import { AuthService } from '../../infrastructure/services/AuthService';
-import { leaveTypeController } from './dependencyInjection/LeaveType';
-import { authMiddleware } from './dependencyInjection/authentication';
+import { Router } from "express";
+import { leaveController } from "./dependencyInjection/LeaveRequest"
+import { authMiddleware } from "./dependencyInjection/authentication";
 
-export const createLeaveTypeRouter = (authService : AuthService): Router => {
-    const router = Router();
+export const createLeaveRequestRouter = (
+): Router => {
+  const router = Router();
+  
 
-    router.post(
-        '/admin/leaveTypes',
-        authMiddleware.authenticate,
-        authMiddleware.authorizeRole([UserRole.ADMIN]),
-        leaveTypeController.createLeaveType
-    );
+  // User routes
+  router.post(
+    "/user/leave-request",
+    authMiddleware.authenticate,
+    leaveController.applyLeave
+  );
 
-    router.put(
-        '/admin/leaveTypes/:leaveTypeId',
-        authMiddleware.authenticate,
-        authMiddleware.authorizeRole([UserRole.ADMIN]),
-        leaveTypeController.editLeaveType
-    );
+  router.patch(
+    "/user/leave-request/:leaveRequestId/edit",
+    authMiddleware.authenticate,
+    leaveController.requestEditLeave
+  );
 
-    router.patch(
-        '/admin/leaveTypes/:leaveTypeId',
-        authMiddleware.authenticate,
-        authMiddleware.authorizeRole([UserRole.ADMIN]),
-        leaveTypeController.blockLeaveType
-    );
+  router.delete(
+    "/user/leave-request/:leaveRequestId/cancel",
+    authMiddleware.authenticate,
+    leaveController.changeLeaveStatus
+  );
 
-    // Get all leave types
-    router.get(
-        '/admin/leaveTypes',
-        authMiddleware.authenticate,
-        authMiddleware.authorizeRole([UserRole.ADMIN]),
-        leaveTypeController.getAllLeaveTypes
-    );
+  router.post(
+    "/admin/manager/leave-request/:userId",
+    authMiddleware.authenticate,
+    authMiddleware.managerOrAdminCanAccessEmployee,
+    leaveController.applyLeave
+  );
 
+  // Use the generalized changeLeaveStatus for approve, reject, cancel
+  router.patch(
+    "/admin/manager/leave-request/:leaveRequestId/approve",
+    authMiddleware.authenticate,
+    authMiddleware.managerOrAdminCanAccessEmployee,
+    leaveController.changeLeaveStatus
+  );
 
-    router.get(
-        '/leaveTypes/list',
-        authMiddleware.authenticate,
-        authMiddleware.authorizeRole([UserRole.MANAGER, UserRole.USER]),
-        leaveTypeController.getAllUnblockedLeaveTypes
-    );
+  router.patch(
+    "/admin/manager/leave-request/:leaveRequestId/reject",
+    authMiddleware.authenticate,
+    authMiddleware.managerOrAdminCanAccessEmployee,
+    leaveController.changeLeaveStatus
+  );
 
+  // Admin route to get all leave requests
+  router.get(
+    "/admin/leave-requests",
+    authMiddleware.authenticate,
+    authMiddleware.adminOnly,
+    leaveController.getAllLeavesForAdmin
+  );
 
-    router.get(
-        '/leaveTypes/:leaveTypeId',
-        authMiddleware.authenticate,
-        authMiddleware.authorizeRole([UserRole.MANAGER, UserRole.USER]),
-        leaveTypeController.getLeaveTypeById
-    );
+  // User route to get their own leave requests
+  router.get(
+    "/user/leave-requests",
+    authMiddleware.authenticate,
+    leaveController.getAllLeavesForUser
+  );
 
-    return router;
+  return router;
 };

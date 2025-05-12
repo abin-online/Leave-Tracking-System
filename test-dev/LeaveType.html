@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leave Type Form</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 20px;">
+
+  <h2 style="text-align: center; color: #333;">Create/Edit Leave Type</h2>
+
+  <form style="max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #ddd;">
+    
+    <!-- Leave Type Code -->
+    <div style="margin-bottom: 15px;">
+      <label for="code" style="font-size: 14px; font-weight: bold;">Leave Type Code:</label>
+      <input type="text" id="code" name="code" style="width: 100%; padding: 10px; font-size: 14px; border-radius: 5px; border: 1px solid #ccc;" placeholder="e.g., ANNUAL, SICK" required>
+    </div>
+    
+    <!-- Internal Name -->
+    <div style="margin-bottom: 15px;">
+      <label for="internalName" style="font-size: 14px; font-weight: bold;">Internal Name:</label>
+      <input type="text" id="internalName" name="internalName" style="width: 100%; padding: 10px; font-size: 14px; border-radius: 5px; border: 1px solid #ccc;" placeholder="e.g., Annual Leave" required>
+    </div>
+    
+    <!-- Display Name -->
+    <div style="margin-bottom: 15px;">
+      <label for="displayName" style="font-size: 14px; font-weight: bold;">Display Name:</label>
+      <input type="text" id="displayName" name="displayName" style="width: 100%; padding: 10px; font-size: 14px; border-radius: 5px; border: 1px solid #ccc;" placeholder="e.g., Annual Leave" required>
+    </div>
+    
+    <!-- Description -->
+    <div style="margin-bottom: 15px;">
+      <label for="description" style="font-size: 14px; font-weight: bold;">Description:</label>
+      <textarea id="description" name="description" rows="4" style="width: 100%; padding: 10px; font-size: 14px; border-radius: 5px; border: 1px solid #ccc;" placeholder="e.g., Leave for vacation or personal time off"></textarea>
+    </div>
+    
+    <!-- Effective Date -->
+    <div style="margin-bottom: 15px;">
+      <label for="effectiveDate" style="font-size: 14px; font-weight: bold;">Effective Date:</label>
+      <input type="date" id="effectiveDate" name="effectiveDate" style="width: 100%; padding: 10px; font-size: 14px; border-radius: 5px; border: 1px solid #ccc;" required>
+    </div>
+    
+    <!-- Accrual Rules -->
+    <div style="margin-bottom: 20px;">
+      <h3 style="font-size: 16px; color: #333;">Accrual Rules</h3>
+      
+      <!-- Accrual Type -->
+      <div style="margin-bottom: 15px;">
+        <label for="accrualType" style="font-size: 14px; font-weight: bold;">Accrual Type:</label>
+        <select id="accrualType" name="accrualType" style="width: 100%; padding: 10px; font-size: 14px; border-radius: 5px; border: 1px solid #ccc;" required>
+          <option value="unlimited">Unlimited</option>
+          <option value="timeBased">Time-Based</option>
+          <option value="frequencyBased">Frequency-Based</option>
+        </select>
+      </div>
+      
+      <!-- Accrual Frequency (for Frequency-Based) -->
+      <div style="margin-bottom: 15px;" id="accrualFrequencyContainer" style="display: none;">
+        <label for="frequency" style="font-size: 14px; font-weight: bold;">Accrual Frequency:</label>
+        <select id="frequency" name="frequency" style="width: 100%; padding: 10px; font-size: 14px; border-radius: 5px; border: 1px solid #ccc;">
+          <option value="monthly">Monthly</option>
+          <option value="yearly">Yearly</option>
+          <option value="quarterly">Quarterly</option>
+        </select>
+      </div>
+
+      <!-- Time-Based Accrual -->
+      <div style="margin-bottom: 15px;" id="timeBasedContainer" style="display: none;">
+        <label for="timeBasedValue" style="font-size: 14px; font-weight: bold;">Accrual Value:</label>
+        <input type="number" id="timeBasedValue" name="timeBasedValue" style="width: 100%; padding: 10px; font-size: 14px; border-radius: 5px; border: 1px solid #ccc;" placeholder="e.g., 2 days per year">
+      </div>
+    </div>
+    
+    <!-- Carry Forward Rules -->
+    <div style="margin-bottom: 15px;">
+      <label for="carryForward" style="font-size: 14px; font-weight: bold;">Carry Forward:</label>
+      <input type="checkbox" id="carryForward" name="carryForward" style="margin-right: 10px;">
+      <label for="carryForward" style="font-size: 14px; font-weight: normal;">Allow carry forward of unused leave</label>
+    </div>
+    
+    <div style="margin-bottom: 15px;" id="carryForwardMaxContainer" style="display: none;">
+      <label for="carryForwardMax" style="font-size: 14px; font-weight: bold;">Max Days to Carry Forward:</label>
+      <input type="number" id="carryForwardMax" name="carryForwardMax" style="width: 100%; padding: 10px; font-size: 14px; border-radius: 5px; border: 1px solid #ccc;">
+    </div>
+    
+    <!-- Prorated Leave -->
+    <div style="margin-bottom: 15px;">
+      <label for="proRated" style="font-size: 14px; font-weight: bold;">Prorated Leave:</label>
+      <input type="checkbox" id="proRated" name="proRated" style="margin-right: 10px;">
+      <label for="proRated" style="font-size: 14px; font-weight: normal;">Prorated for mid-year joiners</label>
+    </div>
+
+    <!-- Submit Button -->
+    <div style="text-align: center;">
+      <button type="submit" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">
+        Save Leave Type
+      </button>
+    </div>
+    
+  </form>
+
+  <script>
+    // Toggle display based on selected accrual type
+    const accrualTypeSelector = document.getElementById("accrualType");
+    const accrualFrequencyContainer = document.getElementById("accrualFrequencyContainer");
+    const timeBasedContainer = document.getElementById("timeBasedContainer");
+    const carryForwardMaxContainer = document.getElementById("carryForwardMaxContainer");
+
+    accrualTypeSelector.addEventListener("change", function() {
+      const selectedType = accrualTypeSelector.value;
+      
+      if (selectedType === "frequencyBased") {
+        accrualFrequencyContainer.style.display = "block";
+        timeBasedContainer.style.display = "none";
+      } else if (selectedType === "timeBased") {
+        accrualFrequencyContainer.style.display = "none";
+        timeBasedContainer.style.display = "block";
+      } else {
+        accrualFrequencyContainer.style.display = "none";
+        timeBasedContainer.style.display = "none";
+      }
+    });
+
+    // Toggle carry forward max input visibility based on checkbox
+    const carryForwardCheckbox = document.getElementById("carryForward");
+    carryForwardCheckbox.addEventListener("change", function() {
+      carryForwardMaxContainer.style.display = carryForwardCheckbox.checked ? "block" : "none";
+    });
+  </script>
+
+</body>
+</html>

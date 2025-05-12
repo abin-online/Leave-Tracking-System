@@ -1,11 +1,8 @@
 import { Router } from "express";
-import { AttendanceController } from "../controller/AttendanceController";
-import { IAttendanceUseCase } from "../../application/Iuse-cases/IAttendance/IAttendance";
-import { AuthMiddleware } from "../middleware/authMiddleware";
-
-export const createAttendanceRouter = (attendanceUseCase: IAttendanceUseCase, authMiddleware: AuthMiddleware): Router => {
+import { attendanceController } from "./dependencyInjection/attendance";
+import { authMiddleware } from "./dependencyInjection/authentication";
+export const createAttendanceRouter = (): Router => {
     const router = Router();
-    const attendanceController = new AttendanceController(attendanceUseCase);
 
     router.post(
         '/attendance/:userId/check-in',

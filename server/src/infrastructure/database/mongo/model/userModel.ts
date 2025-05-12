@@ -1,4 +1,3 @@
-// src/infrastructure/database/models/UserModel.ts
 import mongoose, { Schema, Document } from 'mongoose';
 import { UserRole } from '../../../../domain/enums/UserRole';
 import { Gender } from '../../../../domain/enums/Gender';
@@ -9,6 +8,7 @@ export interface UserDocument extends Document {
   email: string;
   passwordHash?: string;
   role: UserRole;
+  zone?: string;
   gender: Gender;
   otp?: string;
   otpExpiry?: Date;
@@ -24,6 +24,7 @@ const userSchema = new Schema<UserDocument>(
     email: { type: String, required: true, unique: true },
     passwordHash: { type: String },
     role: { type: String, enum: Object.values(UserRole), required: true },
+    zone: { type: String },
     gender: { type: String, enum: Object.values(Gender), required: true },
     otp: { type: String },
     otpExpiry: { type: Date },

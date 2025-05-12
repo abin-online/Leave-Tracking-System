@@ -10,8 +10,9 @@ export interface User {
     gender: Gender;
     otp?: string;
     otpExpiry?: Date;
-    isApproved?: boolean; 
-    employees? : string[]
+    isApproved?: boolean; // to register as manager, admin will later approve after signup
+    employees? : string[];
+    zone? : string;
     createdAt: Date;
     updatedAt: Date;
 }
