@@ -1,9 +1,11 @@
-const AdminDashboarrd = () => {
+import AdminDashboardComponent from "../../components/admin/Dashboard/AdminDashboard";
+
+const AdminDashboardPage = () => {
   return (
-    <div>
-      <h1>DASHBOARD</h1>
-    </div>
+    <>
+      <AdminDashboardComponent />
+    </>
   );
 };
 
-export default AdminDashboarrd;
+export default AdminDashboardPage;

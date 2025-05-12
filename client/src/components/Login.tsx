@@ -97,7 +97,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ role, handleLogin }) => {
         localStorage.setItem("role", response.role);
         localStorage.setItem("email", response.email);
         localStorage.setItem("name", response.user.name);
-
+        localStorage.setItem("userId", response.user?._id)
         dispatch(
           setUser({
             name: response.user.name,

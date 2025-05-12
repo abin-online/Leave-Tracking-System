@@ -9,14 +9,12 @@ export const userSignup = async (userData: User) => {
         return response.data
     } catch (error: any) {
         console.error('Error during signup request:', error.message);
-        
-        // If error is from API response, return the error details
+
         if (error.response) {
             console.error('API Response Error:', error.response.data);
-            return error.response.data; // This could contain status and error messages from the API
+            return error.response.data;
         }
 
-        // Return a generic error message if no response from API
         console.error('Unknown Error:', error);
     }
 }

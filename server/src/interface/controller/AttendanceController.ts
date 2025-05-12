@@ -6,6 +6,7 @@ export class AttendanceController {
 
     public checkIn = async (req: Request, res: Response): Promise<void> => {
         try {
+            console.log('check in ')
             const { userId } = req.params
             const result = await this.attendanceUseCase.checkIn(userId);
             res.status(200).json(result);

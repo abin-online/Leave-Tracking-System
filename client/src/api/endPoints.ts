@@ -7,3 +7,7 @@ export const authRoutes = {
     approveManager: '/api/auth/admin/approve-manager/',
     adminLogin : '/api/auth/admin/login'
 }
+
+export const attendance = {
+    clockIn : `/api/attendance/attendance/`
+}
